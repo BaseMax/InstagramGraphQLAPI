@@ -32,7 +32,7 @@ Access the API at http://localhost:3000/api/graphql
 
 ## Authentication
 
-This API uses token-based authentication. To access protected endpoints, include an Authorization header in your requests with the value Bearer YOUR_TOKEN.
+This API uses token-based authentication. To access protected endpoints, include an Authorization header in your requests with the value `Bearer YOUR_TOKEN`.
 
 ## Features
 
