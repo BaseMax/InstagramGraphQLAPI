@@ -400,6 +400,131 @@ query RetrieveDirectMessages {
 
 These examples cover various features such as user registration, login, profile retrieval, follow/unfollow functionality, fetching followers and following users, getting the user's feed, retrieving a post, and searching for users. Remember to customize the variables and adjust the schema and resolvers accordingly to match your specific implementation.
 
+### Auto Testing
+
+Here's an example of a test script in TypeScript using the Jest testing framework to test the GraphQL queries and mutations for an Instagram clone API:
+
+```typescript
+import axios from 'axios';
+
+const API_URL = 'http://your-api-endpoint';
+
+describe('Instagram Clone API Tests', () => {
+  let authToken: string;
+
+  beforeAll(async () => {
+    // Authenticate and obtain the auth token
+    const response = await axios.post(`${API_URL}/login`, {
+      username: 'john_doe',
+      password: 'password',
+    });
+    authToken = response.data.token;
+  });
+
+  it('should retrieve user profile', async () => {
+    const response = await axios.post(
+      `${API_URL}/graphql`,
+      {
+        query: `
+          query {
+            userProfile(userId: "user_id") {
+              id
+              username
+              name
+              bio
+              profilePicture
+              followersCount
+              followingCount
+            }
+          }
+        `,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.data.data.userProfile).toBeDefined();
+    expect(response.data.data.userProfile.username).toBe('john_doe');
+  });
+
+  it('should follow a user', async () => {
+    const response = await axios.post(
+      `${API_URL}/graphql`,
+      {
+        query: `
+          mutation {
+            followUser(userId: "user_id") {
+              id
+              username
+            }
+          }
+        `,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.data.data.followUser).toBeDefined();
+    expect(response.data.data.followUser.username).toBe('user_to_follow');
+  });
+
+  it('should create a post', async () => {
+    const response = await axios.post(
+      `${API_URL}/graphql`,
+      {
+        query: `
+          mutation {
+            createPost(input: { caption: "My first post", imageUrl: "image_url" }) {
+              id
+              caption
+              imageUrl
+              likesCount
+              commentsCount
+              createdAt
+              user {
+                id
+                username
+              }
+            }
+          }
+        `,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.data.data.createPost).toBeDefined();
+    expect(response.data.data.createPost.caption).toBe('My first post');
+    expect(response.data.data.createPost.user.username).toBe('john_doe');
+  });
+
+  // Add more tests for other queries and mutations
+
+});
+```
+
+In this example, we're using Jest and Axios to send requests to the GraphQL API and assert the expected responses. The beforeAll block authenticates the user and obtains an auth token, which is then included in the headers of subsequent requests.
+
+You can add more tests for other queries and mutations by following a similar structure. Modify the queries/mutations, assertions, and provide the necessary variables for each test case.
+
+Remember to replace http://your-api-endpoint with the actual URL of your GraphQL API.
+
+To run the test script, you'll need to have Jest installed (npm install --save-dev jest) and execute the command npx jest in your project directory.
+
+Feel free to customize the test script further according to your specific requirements.
+
 ## CLI Testing
 
 Here are a few CURL commands that you can use to test the GraphQL queries and mutations mentioned earlier:
