@@ -12,12 +12,12 @@ This GraphQL API is built using Next.js and TypeScript, providing access to vari
 1. Clone the repository:
 
 ```shell
-git clone https://github.com/your-repo-url.git
+git clone https://github.com/BaseMax/InstagramGraphQLAPI.git
 ```
 
 Install the dependencies:
 ```shell
-cd your-repo-folder
+cd InstagramGraphQLAPI
 yarn install
 ```
 
