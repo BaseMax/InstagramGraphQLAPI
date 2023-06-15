@@ -102,6 +102,160 @@ This API uses token-based authentication. To access protected endpoints, include
 - MarkNotificationAsRead: Mark a notification as read
 - MarkMessageAsRead: Mark a direct message as read
 
+## Examples
+
+**User Registration Mutation:**
+
+```graphql
+mutation CreateUser($input: CreateUserInput!) {
+  createUser(input: $input) {
+    id
+    username
+    name
+  }
+}
+```
+
+**User Login Mutation:**
+
+```graphql
+mutation LoginUser($input: LoginUserInput!) {
+  loginUser(input: $input) {
+    token
+  }
+}
+```
+
+**Get User Profile Query:**
+
+```graphql
+query GetUserProfile($userId: ID!) {
+  userProfile(userId: $userId) {
+    id
+    username
+    name
+    bio
+    profilePicture
+    followersCount
+    followingCount
+    postsCount
+    followers {
+      id
+      username
+    }
+    following {
+      id
+      username
+    }
+  }
+}
+```
+
+**Follow User Mutation:**
+
+```graphql
+mutation FollowUser($userId: ID!) {
+  followUser(userId: $userId) {
+    id
+    username
+  }
+}
+```
+
+**Unfollow User Mutation:**
+
+```graphql
+mutation UnfollowUser($userId: ID!) {
+  unfollowUser(userId: $userId) {
+    id
+    username
+  }
+}
+```
+
+**Get User's Followers Query:**
+
+```graphql
+query GetUserFollowers($userId: ID!) {
+  userFollowers(userId: $userId) {
+    id
+    username
+    name
+    profilePicture
+  }
+}
+```
+
+**Get User's Following Query:**
+
+```graphql
+query GetUserFollowing($userId: ID!) {
+  userFollowing(userId: $userId) {
+    id
+    username
+    name
+    profilePicture
+  }
+}
+```
+
+**Get User's Feed Query:**
+
+```graphql
+query GetUserFeed {
+  userFeed {
+    id
+    caption
+    imageUrl
+    likesCount
+    commentsCount
+    createdAt
+    user {
+      id
+      username
+      name
+      profilePicture
+    }
+  }
+}
+```
+
+**Get Post Query:**
+
+```graphql
+query GetPost($postId: ID!) {
+  post(postId: $postId) {
+    id
+    caption
+    imageUrl
+    likesCount
+    commentsCount
+    createdAt
+    user {
+      id
+      username
+      name
+      profilePicture
+    }
+  }
+}
+```
+
+**Search Users Query:**
+
+```graphql
+query SearchUsers($query: String!) {
+  searchUsers(query: $query) {
+    id
+    username
+    name
+    profilePicture
+  }
+}
+```
+
+These examples cover various features such as user registration, login, profile retrieval, follow/unfollow functionality, fetching followers and following users, getting the user's feed, retrieving a post, and searching for users. Remember to customize the variables and adjust the schema and resolvers accordingly to match your specific implementation.
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or would like to add new features, feel free to open a pull request.
