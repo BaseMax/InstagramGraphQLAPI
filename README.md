@@ -254,6 +254,148 @@ query SearchUsers($query: String!) {
 }
 ```
 
+**Create Post Mutation:**
+
+```graphql
+mutation CreatePost($input: CreatePostInput!) {
+  createPost(input: $input) {
+    id
+    caption
+    imageUrl
+    likesCount
+    commentsCount
+    createdAt
+    user {
+      id
+      username
+      name
+      profilePicture
+    }
+  }
+}
+```
+
+**Like Post Mutation:**
+
+```graphql
+mutation LikePost($postId: ID!) {
+  likePost(postId: $postId) {
+    id
+    likesCount
+  }
+}
+```
+
+**Unlike Post Mutation:**
+
+```graphql
+mutation UnlikePost($postId: ID!) {
+  unlikePost(postId: $postId) {
+    id
+    likesCount
+  }
+}
+```
+
+**Comment on Post Mutation:**
+
+```graphql
+mutation CommentOnPost($postId: ID!, $text: String!) {
+  commentOnPost(postId: $postId, text: $text) {
+    id
+    text
+    createdAt
+    user {
+      id
+      username
+      name
+      profilePicture
+    }
+  }
+}
+```
+
+**Delete Post Mutation:**
+
+```graphql
+mutation DeletePost($postId: ID!) {
+  deletePost(postId: $postId) {
+    id
+  }
+}
+```
+
+**Retrieve Notifications Query:**
+
+```graphql
+query RetrieveNotifications {
+  notifications {
+    id
+    type
+    createdAt
+    user {
+      id
+      username
+      name
+      profilePicture
+    }
+    post {
+      id
+      caption
+      imageUrl
+    }
+  }
+}
+```
+
+**Send Direct Message Mutation:**
+
+```graphql
+mutation SendDirectMessage($recipientId: ID!, $text: String!) {
+  sendDirectMessage(recipientId: $recipientId, text: $text) {
+    id
+    text
+    createdAt
+    sender {
+      id
+      username
+      name
+      profilePicture
+    }
+    recipient {
+      id
+      username
+      name
+      profilePicture
+    }
+  }
+}
+```
+
+**Retrieve Direct Messages Query:**
+
+```graphql
+query RetrieveDirectMessages {
+  directMessages {
+    id
+    text
+    createdAt
+    sender {
+      id
+      username
+      name
+      profilePicture
+    }
+    recipient {
+      id
+      username
+      name
+      profilePicture
+    }
+  }
+}
+```
+
 These examples cover various features such as user registration, login, profile retrieval, follow/unfollow functionality, fetching followers and following users, getting the user's feed, retrieving a post, and searching for users. Remember to customize the variables and adjust the schema and resolvers accordingly to match your specific implementation.
 
 ## Contributing
