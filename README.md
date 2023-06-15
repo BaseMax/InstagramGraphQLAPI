@@ -16,12 +16,14 @@ git clone https://github.com/BaseMax/InstagramGraphQLAPI.git
 ```
 
 Install the dependencies:
+
 ```shell
 cd InstagramGraphQLAPI
 yarn install
 ```
 
 Start the development server:
+
 ```shell
 yarn dev
 ```
