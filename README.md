@@ -398,6 +398,74 @@ query RetrieveDirectMessages {
 
 These examples cover various features such as user registration, login, profile retrieval, follow/unfollow functionality, fetching followers and following users, getting the user's feed, retrieving a post, and searching for users. Remember to customize the variables and adjust the schema and resolvers accordingly to match your specific implementation.
 
+## CLI Testing
+
+Here are a few CURL commands that you can use to test the GraphQL queries and mutations mentioned earlier:
+
+User Registration Mutation:
+
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{"query":"mutation { createUser(input: { username: \"john_doe\", name: \"John Doe\", password: \"password\" }) { id username name } }"}' http://your-api-endpoint
+```
+
+User Login Mutation:
+
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{"query":"mutation { loginUser(input: { username: \"john_doe\", password: \"password\" }) { token } }"}' http://your-api-endpoint
+```
+
+Get User Profile Query:
+
+```shell
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"query":"query { userProfile(userId: \"user_id\") { id username name bio profilePicture followersCount followingCount postsCount followers { id username } following { id username } } }"}' http://your-api-endpoint
+```
+
+Follow User Mutation:
+
+```shell
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"query":"mutation { followUser(userId: \"user_id\") { id username } }"}' http://your-api-endpoint
+```
+
+Unfollow User Mutation:
+
+```shell
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"query":"mutation { unfollowUser(userId: \"user_id\") { id username } }"}' http://your-api-endpoint
+```
+
+Get User's Followers Query:
+```shell
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"query":"query { userFollowers(userId: \"user_id\") { id username name profilePicture } }"}' http://your-api-endpoint
+```
+
+Get User's Following Query:
+
+```shell
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"query":"query { userFollowing(userId: \"user_id\") { id username name profilePicture } }"}' http://your-api-endpoint
+```
+
+Get User's Feed Query:
+
+```shell
+Copy code
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"query":"query { userFeed { id caption imageUrl likesCount commentsCount createdAt user { id username name profilePicture } } }"}' http://your-api-endpoint
+```
+
+Get Post Query:
+
+```shell
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"query":"query { post(postId: \"post_id\") { id caption imageUrl likesCount commentsCount createdAt user { id username name profilePicture } } }"}' http://your-api-endpoint
+```
+  
+Search Users Query:
+
+```shell
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"query":"query { searchUsers(query: \"search_query\") { id username name profilePicture } }"}' http://your-api-endpoint
+```
+
+Make sure to replace <token>, user_id, and post_id with the actual values you have obtained during authentication or from previous API responses.
+
+Also, replace http://your-api-endpoint with the actual URL of your GraphQL API
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or would like to add new features, feel free to open a pull request.
