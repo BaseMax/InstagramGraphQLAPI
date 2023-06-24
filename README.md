@@ -1,6 +1,6 @@
 # GraphQL API with Nest.js and TypeScript
 
-This GraphQL API is built using Next.js and TypeScript, providing access to various features and functionalities. The API follows the GraphQL schema-first approach, where the schema is defined using the GraphQL schema language. The server implementation utilizes Next.js for routing and handling GraphQL requests.
+This GraphQL API is built using Nest.js and TypeScript, providing access to various features and functionalities. The API follows the GraphQL schema-first approach, where the schema is defined using the GraphQL schema language. The server implementation utilizes Nest.js for routing and handling GraphQL requests.
 
 ## Prerequisites
 
