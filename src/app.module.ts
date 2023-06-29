@@ -26,9 +26,6 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
     PostModule,
     MessageModule,
     NotificationModule,
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-    }),
     PrismaModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],

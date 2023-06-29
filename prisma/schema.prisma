@@ -13,9 +13,9 @@ datasource db {
 model User {
   id                Int                 @id @default(autoincrement())
   name              String
-  username          String
+  username          String              @unique
   password          String
-  phonenumber       String
+  phonenumber       String              @unique
   bio               String
   status            String              @default("ACTIVE")
   posts             Post[]
@@ -25,9 +25,8 @@ model User {
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   NotificationToken NotificationToken[]
-  // followers         User[]
-  // User              User?               @relation(fields: [userId], references: [id])
-  userId            Int?
+  followedBy        User[]              @relation("UserFollows")
+  following         User[]              @relation("UserFollows")
 }
 
 model Post {

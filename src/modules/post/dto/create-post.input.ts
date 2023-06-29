@@ -2,8 +2,8 @@ import { Field, InputType } from '@nestjs/graphql';
 import { Length } from 'class-validator';
 
 @InputType()
-export class CreateUserInput {
+export class CreatePostInput {
   @Length(1, 20)
   @Field()
-  name: string;
+  title: string;
 }

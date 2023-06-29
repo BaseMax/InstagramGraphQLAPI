@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Resolver } from '@nestjs/graphql';
 
-@Controller('message')
-export class MessageController {}
+@Resolver('message')
+export class MessageResolver {}
