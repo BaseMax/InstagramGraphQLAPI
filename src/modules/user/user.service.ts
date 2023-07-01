@@ -64,10 +64,65 @@ export class UserService {
     return deletedUser;
   }
 
-  async followUser(id : number) {
+  async followUser(ToFollowId: number, wantFollowId: number): Promise<User[]> {
     //first we should make sure user with this id exists
+    const wantToFollow = await this.findUserById(ToFollowId);
+    const userRequestingForFollow = await this.findUserById(wantFollowId);
     //then we will retrieve it from db
     //then we add that user to lsit of following of the user requesting
+    const updatedUser = await this.prismaService.user.update({
+      where: {
+        id: wantFollowId,
+      },
+      data: {
+        following: {
+          connect: {
+            id: ToFollowId,
+          },
+        },
+      },
+    });
+
+    const updatedFollowedUser = await this.prismaService.user.update({
+      where: {
+        id: ToFollowId,
+      },
+      data: {
+        followedBy: {
+          connect: {
+            id: wantFollowId,
+          },
+        },
+      },
+    });
+    return [updatedUser, updatedFollowedUser];
+  }
+
+  async listFollowers(id: number): Promise<User[]> {
+    const userFound = await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        followedBy: true,
+        following: true,
+      },
+    });
+    return userFound.following;
+  }
+
+  async listFollowingBy(id: number): Promise<User[]> {
+    const userFound = await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        followedBy: true,
+        following: true,
+      },
+    });
+
+    return userFound.followedBy;
   }
 
   async findUserByUserName(username: string): Promise<User | undefined | null> {
@@ -107,6 +162,23 @@ export class UserService {
       where: {
         username: username,
         phonenumber: phonenumber,
+      },
+    });
+    return userFound;
+  }
+
+  async findUserById(id: number): Promise<User | undefined> {
+    if (!id) {
+      throw new BadRequestException('id is invalid');
+    }
+    const userFound = await this.prismaService.user.findUniqueOrThrow({
+      where: {
+        id: id,
+      },
+      include: {
+        following: true,
+        followedBy: true,
+        posts: true,
       },
     });
     return userFound;

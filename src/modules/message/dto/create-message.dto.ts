@@ -2,15 +2,14 @@ import { Field, InputType } from '@nestjs/graphql';
 import { Length } from 'class-validator';
 
 @InputType()
-export class CreatePostInput {
+export class CreateMessageInput {
   @Length(3, 300)
   @Field()
   body: string;
 
-  @Length(3, 40)
   @Field()
-  title: string;
+  senderId: number;
 
   @Field()
-  userId: number;
+  reciptientId: number;
 }

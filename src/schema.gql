@@ -42,34 +42,44 @@ type user {
   posts: [post!]!
   messages: [message!]!
   notifications: [notification!]!
+  following: [user!]!
+  followedBy: [user!]!
 }
 
 type Query {
   getAllUsers: [user!]!
   getUserProfile(id: Float!): user
+  listFollowers(id: Float!): [user!]!
+  listFollowedBy(id: Float!): [user!]!
   getAllPosts: [post!]!
-  getPost(id: String!): post!
+  getPost(id: Float!): post!
+  RetrieveUsersPosts(id: Float!): [post!]!
 }
 
 type Mutation {
-  createUser(input: CreateUserInput!): user!
   updateUser(input: UpdateUserInput!): user!
-  deleteUser: user!
+  deleteUser(id: Float!): user!
+  followUser(ToFollowId: Float!, wantFollowId: Float!): [user!]!
   createPost(input: CreatePostInput!): post!
+  likePost(userId: Float!, postId: Float!): post!
+  unlikePost(userId: Float!, postId: Float!): post!
+  commentOnPost(postId: Float!, userId: Float!, text: String!): post!
+  deletePost(id: Float!, userId: Float!): post!
   updatePost(input: UpdatePostInput!): post!
-  deletePost: post!
-}
-
-input CreateUserInput {
-  name: String!
 }
 
 input UpdateUserInput {
   name: String!
+  username: String!
+  password: String!
+  phonenumber: String!
+  bio: String!
 }
 
 input CreatePostInput {
+  body: String!
   title: String!
+  userId: Float!
 }
 
 input UpdatePostInput {
