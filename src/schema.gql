@@ -46,26 +46,41 @@ type user {
   followedBy: [user!]!
 }
 
+type Auth {
+  username: String!
+  bio: String!
+  status: String!
+  phonenumber: String!
+  token: String!
+}
+
 type Query {
-  getAllUsers: [user!]!
   getUserProfile(id: Float!): user
   listFollowers(id: Float!): [user!]!
   listFollowedBy(id: Float!): [user!]!
   getAllPosts: [post!]!
   getPost(id: Float!): post!
   RetrieveUsersPosts(id: Float!): [post!]!
+  retrievePopularPosts: [post!]!
+  retrieveDirectMessages(userId: Float!): [message!]!
 }
 
 type Mutation {
   updateUser(input: UpdateUserInput!): user!
   deleteUser(id: Float!): user!
   followUser(ToFollowId: Float!, wantFollowId: Float!): [user!]!
+  userRegister(input: RegistrationUserInput!): Auth!
+  userLogin(input: LoginUserInput!): Auth!
+  userLogOut(id: Float!): Auth!
+  ResetPassword(input: ResetPasswordInput!): Auth!
   createPost(input: CreatePostInput!): post!
   likePost(userId: Float!, postId: Float!): post!
   unlikePost(userId: Float!, postId: Float!): post!
   commentOnPost(postId: Float!, userId: Float!, text: String!): post!
   deletePost(id: Float!, userId: Float!): post!
   updatePost(input: UpdatePostInput!): post!
+  sendDirectMessage(input: CreateMessageInput!): message!
+  markMessageAsRead(messageId: Float!): message!
 }
 
 input UpdateUserInput {
@@ -76,6 +91,26 @@ input UpdateUserInput {
   bio: String!
 }
 
+input RegistrationUserInput {
+  name: String!
+  username: String!
+  password: String!
+  phonenumber: String!
+  bio: String!
+}
+
+input LoginUserInput {
+  username: String!
+  password: String!
+}
+
+input ResetPasswordInput {
+  username: String!
+  phonenumber: String!
+  newPassword: String!
+  passwordConfirm: String!
+}
+
 input CreatePostInput {
   body: String!
   title: String!
@@ -84,4 +119,10 @@ input CreatePostInput {
 
 input UpdatePostInput {
   title: String!
+}
+
+input CreateMessageInput {
+  body: String!
+  senderId: Float!
+  reciptientId: Float!
 }

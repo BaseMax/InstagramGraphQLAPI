@@ -7,11 +7,6 @@ import { ParseIntPipe } from '@nestjs/common';
 @Resolver(() => User)
 export class UserResolver {
   constructor(private userService: UserService) {}
-  @Query(() => [User])
-  async getAllUsers() {
-    // return this.userService.
-  }
-
   @Query(() => User, { nullable: true })
   async getUserProfile(@Args('id', ParseIntPipe) id: number) {
     return this.userService.getUserProfile(id);

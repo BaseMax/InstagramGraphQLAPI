@@ -161,7 +161,6 @@ export class UserService {
     const userFound = await this.prismaService.user.findUniqueOrThrow({
       where: {
         username: username,
-        phonenumber: phonenumber,
       },
     });
     return userFound;
