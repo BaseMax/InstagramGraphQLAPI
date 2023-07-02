@@ -19,6 +19,7 @@ model User {
   bio               String
   status            String              @default("ACTIVE")
   posts             Post[]
+  postsLiked        Post[]              @relation("PostLikes")
   messagesSent      Message[]           @relation(name: "SenderRelation")
   messagesReceived  Message[]           @relation(name: "RecipientRelatoin")
   notifications     Notification[]
@@ -35,6 +36,7 @@ model Post {
   body      String
   comments  Comment[]
   likes     Int       @default(0)
+  likedBy   User[]    @relation("PostLikes")
   User      User?     @relation(fields: [userId], references: [id])
   userId    Int?
   createdAt DateTime  @default(now())

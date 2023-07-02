@@ -56,30 +56,70 @@ export class PostService {
 
   async likePost(userId: number, postId: number): Promise<Post> {
     const userFound = await this.userService.findUserById(userId);
-    const postFound = await this.getPostById(postId);
-
-    const postUpdated = await this.prismaService.post.update({
+    const postFound = await this.prismaService.post.findUnique({
       where: {
         id: postId,
       },
-      data: {
-        likes: postFound.likes + 1,
+      include: {
+        likedBy: true,
       },
     });
-    return postFound;
+    let likedBefore: Boolean = false;
+    postFound.likedBy.forEach((user) => {
+      if (user.id === userFound.id) {
+        likedBefore = true;
+      }
+    });
+    let postUpdated: Post = null;
+    if (!likedBefore) {
+      postUpdated = await this.prismaService.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          likes: postFound.likes + 1,
+          likedBy: {
+            connect: { id: userFound.id },
+          },
+        },
+      });
+    } else {
+      throw new BadRequestException('you already have liked the post');
+    }
+    return postUpdated;
   }
   async unlikePost(userId: number, postId: number): Promise<Post> {
     const userFound = await this.userService.findUserById(userId);
-    const postFound = await this.getPostById(postId);
-
-    const postUpdated = await this.prismaService.post.update({
+    const postFound = await this.prismaService.post.findUnique({
       where: {
         id: postId,
       },
-      data: {
-        likes: postFound.likes - 1,
+      include: {
+        likedBy: true,
       },
     });
+    let likedBefore: Boolean = false;
+    postFound.likedBy.forEach((user) => {
+      if (user.id === userFound.id) {
+        likedBefore = true;
+      }
+    });
+    let postUpdated: Post = null;
+    if (likedBefore) {
+      postUpdated = await this.prismaService.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          likes: postFound.likes - 1,
+          likedBy: {
+            disconnect: { id: userFound.id },
+          },
+        },
+      });
+    } else {
+      throw new BadRequestException('you havnt liked the post');
+    }
     return postUpdated;
   }
 
@@ -102,7 +142,7 @@ export class PostService {
         id: postId,
       },
       data: {
-        comments: { create: commentCreated },
+        comments: { connect: { id: commentCreated.id } },
       },
     });
     return updatedPost;
@@ -117,6 +157,10 @@ export class PostService {
         posts: true,
       },
     });
+    const postFound = await this.getPostById(id);
+    if (!postFound) {
+      throw new BadRequestException('post did not found');
+    }
     let isChecked: Boolean = false;
     userFound.posts.forEach((post) => {
       if (post.id === id) isChecked = true;
@@ -128,6 +172,10 @@ export class PostService {
           id: id,
         },
       });
+    } else {
+      throw new BadRequestException(
+        'you are not owner of this post and cannot delete it',
+      );
     }
     return postDeleted;
   }

@@ -34,7 +34,7 @@ export class PostResolver {
   ) {
     return await this.postService.likePost(userId, postId);
   }
-
+ 
   @Mutation(() => Post)
   async unlikePost(
     @Args('userId', ParseIntPipe) userId: number,

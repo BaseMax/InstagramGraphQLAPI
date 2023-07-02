@@ -21,4 +21,7 @@ export class Post {
 
   @Field(() => ID)
   userId: number;
+
+  @Field()
+  likes: number;
 }
