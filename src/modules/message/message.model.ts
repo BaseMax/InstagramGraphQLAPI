@@ -14,10 +14,16 @@ export class Message {
   body: string;
 
   @Field(() => User)
-  user: User;
+  sender: User;
 
   @Field(() => ID)
-  userId: number;
+  senderId: number;
+
+  @Field(() => User)
+  reciptient: User;
+
+  @Field(() => ID)
+  reciptientId: number;
 
   @Field(() => Post)
   post: Post;

@@ -2,8 +2,8 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { Post } from './post.model';
 import { PostService } from './post.service';
 import { CreatePostInput } from './dto/create-post.input';
-import { UpdatePostInput } from './dto/update-post.input';
 import { ParseIntPipe } from '@nestjs/common';
+import { type } from 'os';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -34,7 +34,7 @@ export class PostResolver {
   ) {
     return await this.postService.likePost(userId, postId);
   }
- 
+
   @Mutation(() => Post)
   async unlikePost(
     @Args('userId', ParseIntPipe) userId: number,
@@ -60,8 +60,12 @@ export class PostResolver {
     return await this.postService.deletePost(id, userId);
   }
 
-  @Mutation(() => Post)
-  async updatePost(@Args('input') input: UpdatePostInput) {}
+  @Query(() => [Post])
+  async searchBasedOnHashTags(
+    @Args('input', { type: () => [String] }) input: string[],
+  ) {
+    return await this.postService.searchBasedOnHashTags(input);
+  }
 
   @Query(() => [Post])
   async retrievePopularPosts() {

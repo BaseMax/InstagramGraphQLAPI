@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
 import { CreatePostInput } from './dto/create-post.input';
 import { Post } from '@prisma/client';
+
 @Injectable()
 export class PostService {
   constructor(
@@ -88,6 +89,7 @@ export class PostService {
     }
     return postUpdated;
   }
+
   async unlikePost(userId: number, postId: number): Promise<Post> {
     const userFound = await this.userService.findUserById(userId);
     const postFound = await this.prismaService.post.findUnique({
@@ -211,5 +213,17 @@ export class PostService {
     );
 
     return { startOfDay, endOfDay };
+  }
+
+  async searchBasedOnHashTags(hashtags: string[]): Promise<Post[]> {
+    console.log('hashtags: ', hashtags);
+    const posts = await this.prismaService.post.findMany({
+      where: {
+        OR: hashtags.map((hashtag) => ({
+          body: { contains: hashtag },
+        })),
+      },
+    });
+    return posts;
   }
 }

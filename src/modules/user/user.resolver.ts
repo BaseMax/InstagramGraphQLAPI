@@ -39,4 +39,9 @@ export class UserResolver {
   async listFollowedBy(@Args('id', ParseIntPipe) id: number) {
     return await this.userService.listFollowingBy(id);
   }
+
+  @Query(() => User)
+  async getByUserName(@Args('username') username: string) {
+    return await this.userService.getByUserName(username);
+  }
 }

@@ -170,7 +170,7 @@ export class UserService {
     if (!id) {
       throw new BadRequestException('id is invalid');
     }
-    const userFound = await this.prismaService.user.findUniqueOrThrow({
+    const userFound = await this.prismaService.user.findUnique({
       where: {
         id: id,
       },
@@ -180,6 +180,24 @@ export class UserService {
         posts: true,
       },
     });
+    if (!userFound) {
+      throw new BadGatewayException('user with provided id did not found');
+    }
+    return userFound;
+  }
+
+  async getByUserName(username: string) {
+    if (!username) {
+      throw new BadRequestException('invalid name provided');
+    }
+    const userFound = await this.prismaService.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
+    if (!userFound) {
+      throw new BadRequestException('there is no user with this username');
+    }
     return userFound;
   }
 }
