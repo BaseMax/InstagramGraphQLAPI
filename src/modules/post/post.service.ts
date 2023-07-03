@@ -216,7 +216,6 @@ export class PostService {
   }
 
   async searchBasedOnHashTags(hashtags: string[]): Promise<Post[]> {
-    console.log('hashtags: ', hashtags);
     const posts = await this.prismaService.post.findMany({
       where: {
         OR: hashtags.map((hashtag) => ({

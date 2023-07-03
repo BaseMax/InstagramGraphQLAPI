@@ -92,6 +92,7 @@ type Mutation {
   deletePost(id: Float!, userId: Float!): post!
   sendDirectMessage(input: CreateMessageInput!): message!
   markMessageAsRead(messageId: Float!): message!
+  sendPushNotification(input: CreateNotificationDto!): notification!
 }
 
 input UpdateUserInput {
@@ -132,4 +133,12 @@ input CreateMessageInput {
   body: String!
   senderId: Float!
   reciptientId: Float!
+}
+
+input CreateNotificationDto {
+  userId: Float!
+  title: String!
+  body: String!
+  device_type: String!
+  notification_token: String!
 }
