@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 @ObjectType('Auth')
 export class Auth {
@@ -22,4 +22,8 @@ export class Auth {
   @IsString()
   @Field()
   token: string;
+
+  @IsNumber()
+  @Field()
+  id: number;
 }
