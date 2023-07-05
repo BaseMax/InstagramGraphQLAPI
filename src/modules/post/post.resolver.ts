@@ -3,14 +3,10 @@ import { Post } from './post.model';
 import { PostService } from './post.service';
 import { CreatePostInput } from './dto/create-post.input';
 import { ParseIntPipe } from '@nestjs/common';
-import { type } from 'os';
 
 @Resolver(() => Post)
 export class PostResolver {
   constructor(private postService: PostService) {}
-
-  @Query(() => [Post])
-  async getAllPosts() {}
 
   @Query(() => Post)
   async getPost(@Args('id', ParseIntPipe) id: number) {

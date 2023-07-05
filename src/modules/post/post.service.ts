@@ -11,6 +11,12 @@ export class PostService {
     private userService: UserService,
   ) {}
   async createPost(input: CreatePostInput): Promise<Post | undefined> {
+    if (input.body === '') {
+      throw new BadRequestException('body is empty');
+    }
+    if (input.title === '') {
+      throw new BadRequestException('title is empty');
+    }
     const userFound = await this.userService.findUserById(input.userId);
     const createdPost = await this.prismaService.post.create({
       data: {
@@ -32,6 +38,9 @@ export class PostService {
         id: id,
       },
     });
+    if (!postFound) {
+      throw new BadRequestException('post did not found with provided id');
+    }
     return postFound;
   }
 
@@ -45,7 +54,9 @@ export class PostService {
       },
       include: { following: { include: { posts: true } } },
     });
-
+    if (!userFound) {
+      throw new BadRequestException('user did not found provided id');
+    }
     const feedPosts: Post[] = [];
     userFound.following.forEach((userFollow) => {
       userFollow.posts.forEach((post) => {
@@ -65,6 +76,9 @@ export class PostService {
         likedBy: true,
       },
     });
+    if (!postFound) {
+      throw new BadRequestException('post with this id didnot found');
+    }
     let likedBefore: Boolean = false;
     postFound.likedBy.forEach((user) => {
       if (user.id === userFound.id) {

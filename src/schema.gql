@@ -70,7 +70,6 @@ type Query {
   listFollowers(id: Float!): [user!]!
   listFollowedBy(id: Float!): [user!]!
   getByUserName(username: String!): user!
-  getAllPosts: [post!]!
   getPost(id: Float!): post!
   RetrieveUsersPosts(id: Float!): [post!]!
   searchBasedOnHashTags(input: [String!]!): [post!]!
