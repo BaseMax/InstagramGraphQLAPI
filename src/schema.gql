@@ -120,6 +120,7 @@ input LoginUserInput {
 input ResetPasswordInput {
   username: String!
   phonenumber: String!
+  oldPassword: String!
   newPassword: String!
   passwordConfirm: String!
 }

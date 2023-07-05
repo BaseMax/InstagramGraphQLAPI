@@ -1,7 +1,5 @@
 import { Resolver, Mutation, Context, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { UserService } from '../user/user.service';
-import { AuthPayLoad } from './dto/auth-payload';
 import { RegistrationUserInput } from './dto/register.input';
 import { LoginUserInput } from './dto/login.input';
 import { ResetPasswordInput } from './dto/reset-password.input';
@@ -10,7 +8,7 @@ import { HttpException } from '@nestjs/common';
 
 @Resolver(() => Auth)
 export class AuthResolver {
-  constructor(private userService: UserService, private service: AuthService) {}
+  constructor(private service: AuthService) {}
 
   @Mutation(() => Auth)
   async userRegister(

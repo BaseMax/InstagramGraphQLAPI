@@ -22,7 +22,7 @@ export class UserService {
       },
     });
     if (!user) {
-      throw new BadGatewayException('there is no user with this id');
+      throw new BadRequestException('there is no user with this id');
     }
     return user;
   }
@@ -108,6 +108,9 @@ export class UserService {
         following: true,
       },
     });
+    if (!userFound) {
+      throw new BadRequestException('theres no user with this id');
+    }
     return userFound.following;
   }
 
@@ -121,6 +124,10 @@ export class UserService {
         following: true,
       },
     });
+
+    if (!userFound) {
+      throw new BadRequestException('theres no user with this id');
+    }
 
     return userFound.followedBy;
   }
@@ -181,7 +188,7 @@ export class UserService {
       },
     });
     if (!userFound) {
-      throw new BadGatewayException('user with provided id did not found');
+      throw new BadRequestException('user with provided id did not found');
     }
     return userFound;
   }
