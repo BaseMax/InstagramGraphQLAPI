@@ -6,6 +6,7 @@ import { Post, PrismaClient, User } from '@prisma/client';
 import { PrismaService } from '../src/modules/prisma/prisma.service';
 import { UserService } from '../src/modules/user/user.service';
 import { AuthService } from '../src/modules/auth/auth.service';
+import { PostService } from '../src/modules/post/post.service';
 
 const gql = '/graphql';
 
@@ -13,6 +14,7 @@ describe('AppController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaClient;
   let userService: UserService;
+  let postService: PostService;
   let authService: AuthService;
   let users: User[];
   let user: User;
@@ -35,6 +37,18 @@ describe('AppController (e2e)', () => {
       password: 'ali@ali',
       phonenumber: '0927892982',
       bio: 'hi im ali',
+    });
+    let aUser = await authService.register({
+      username: 'pooya',
+      name: 'pooya',
+      password: 'pooya123',
+      phonenumber: '09152189504',
+      bio: 'hi im pooya',
+    });
+    let aPost = await postService.createPost({
+      body: 'this is a post',
+      title: 'a post',
+      userId: 1,
     });
     let { userCreated, token } = registrationResult;
     userToChangePass = userCreated;
@@ -995,6 +1009,12 @@ describe('AppController (e2e)', () => {
         username: 'ali-dehghan',
       },
     });
+    const deletedAuser = await prisma.user.delete({
+      where: {
+        username: 'pooya',
+      },
+    });
+
     await app.close();
     await prisma.$disconnect();
   });
