@@ -1,138 +1,77 @@
-# write down first mutations and queries
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
 
-type User {
-  id: String!
-  name: String!
-  username: String!
-  password: String!
-  bio: String
-  phonenumber: String
-  status: String
-}
-
-type Post {
-  id: String!
-  title: String!
-  body: String!
-  likes: Int
-}
-
-type Message {
-  id: String!
-  body: String!
-  senderId: ID!
-  reciptientId: ID!
+type message {
+  id: ID!
   read: Boolean!
+  body: String!
+  user: user!
+  userId: ID!
+  post: post!
   postId: ID!
+  seen: Int!
 }
 
-type NotificationToken {
-  id: String!
-  userId: String!
-  device_type: String!
-  notification_type: String
-  notifications: [Notification!]
-  status: String!
-}
-
-type Notification {
-  id: String!
+type post {
+  id: ID!
   title: String!
   body: String!
-  notificationId: String!
+  comments: [message!]!
+  user: user!
+  userId: ID!
+}
+
+type notification {
+  id: ID!
+  title: String!
+  body: String!
   status: String!
-  userId: String!
+  user: user!
+  userId: ID!
 }
 
-type Feed {
-  id: String!
-  caption: String!
-  imageUrl: String!
-  likesCount: Int!
-  commentsCount: Int!
-  createdAt: Date
-  user: User!
-}
-
-type Mutation {
-  CreateUser(input: UserCreateInput!): UserRegistered!
-  Login(input: LoginUserInput!): Token!
-  LogOutUser(userId: ID!): String!
-  UpdateUserProfile(input: UpdateUserProfileInput): User!
-  FollowUser(userId: ID!): followResponse!
-  UnfollowUser(userId: ID!): followResponse!
-  CreatePost(input: PostCreateInput!): Post!
-  LikePost(postId: ID!): Post!
-  UnlikePost(postId: ID!): Post!
-  CommentOnPost(input: CommentPostInput!): Post!
-  DeletePost(postId: ID!): Post!
-  SendMessage(input: MessageSendInput!): Message!
-  MarkNotificationAsRead(notificationId: ID!): Notification!
-}
-
-type Query {
-  GetUserProfile(userId: ID!): UserProfile!
-  GetUsersFollowers(userId: ID!): [User!]
-  GetUsersFollowing(userId: ID!): [User!]
-  GetUserFeed(userId: ID!): [Feed!]
-  RetrievNotification(user: ID!): Notification!
-}
-
-input UserCreateInput {
+type user {
+  id: ID!
   name: String!
   username: String!
   password: String!
   phonenumber: String!
-  bio: String
-  status: String
+  bio: String!
+  status: String!
+  posts: [post!]!
+  messages: [message!]!
+  notifications: [notification!]!
 }
 
-input UpdateUserProfileInput {
-  name: String
-  username: String
-  password: String
-  phonenumber: String
-  bio: String
-  status: String
+type Query {
+  getAllUsers: [user!]!
+  getUserProfile(id: Float!): user
+  getAllPosts: [post!]!
+  getPost(id: String!): post!
 }
 
-type UserRegistered {
-  id: String!
+type Mutation {
+  createUser(input: CreateUserInput!): user!
+  updateUser(input: UpdateUserInput!): user!
+  deleteUser: user!
+  createPost(input: CreatePostInput!): post!
+  updatePost(input: UpdatePostInput!): post!
+  deletePost: post!
+}
+
+input CreateUserInput {
   name: String!
-  username: String!
 }
 
-type Token {
-  token: String!
+input UpdateUserInput {
+  name: String!
 }
 
-type followResponse {
-  id: String!
-  username: String!
-}
-
-type CreatePostInput {
+input CreatePostInput {
   title: String!
-  body: String!
-  userId: String!
 }
 
-type MessageSendInput {
-  senderId: String!
-  reciptiontId: String!
-  body: String!
-  postId: String
-}
-
-type UserProfile {
-  id: String!
-  username: String
-  name: String
-  bio: String
-  profilePicture: String
-  followersCount: Int
-  followingCount: Int
-  postsCount: Int
-  followers: [User!]
-  following: [User!]
+input UpdatePostInput {
+  title: String!
 }

@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from '../user/user.model';
 
-@ObjectType()
+@ObjectType('notification')
 export class Notification {
   @Field(() => ID)
   id: number;
@@ -15,7 +15,9 @@ export class Notification {
   @Field()
   status: string;
 
-  @Field()
+  @Field(() => User)
   user: User;
-  userId: String;
+
+  @Field(() => ID)
+  userId: number;
 }

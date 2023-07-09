@@ -1,8 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { User } from './user.model';
 import { UserService } from './user.service';
-import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { ParseIntPipe } from '@nestjs/common';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -13,16 +13,22 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  async getUser(@Args('id') id: string) {
-    // return this.userService
+  async getUserProfile(@Args('id', ParseIntPipe) id: number) {
+    return this.userService.getUserProfile(id);
   }
 
   @Mutation(() => User)
-  async createUser(@Args('input') input: CreateUserInput) {}
+  async updateUser(@Args('input') input: UpdateUserInput) {
+    return this.userService.updateUser(input);
+  }
 
   @Mutation(() => User)
-  async updateUser(@Args('input') input: UpdateUserInput) {}
+  async deleteUser(@Args('id', ParseIntPipe) id: number) {
+    return this.userService.deleteUser(id);
+  }
 
   @Mutation(() => User)
-  async deleteUser() {}
+  async followUser(@Args('id' , ParseIntPipe) id : number){
+    return this.userService
+  }
 }

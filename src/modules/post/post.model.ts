@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Message } from '../message/message.model';
 import { User } from '../user/user.model';
 
-@ObjectType()
+@ObjectType('post')
 export class Post {
   @Field(() => ID)
   id: number;
@@ -16,7 +16,9 @@ export class Post {
   @Field(() => [Message])
   comments: Message[];
 
-  @Field()
+  @Field(() => User)
   user: User;
-  userId: String;
+
+  @Field(() => ID)
+  userId: number;
 }
