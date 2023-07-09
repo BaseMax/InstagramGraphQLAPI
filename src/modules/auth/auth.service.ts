@@ -78,7 +78,17 @@ export class AuthService {
       userResetInput.username,
       userResetInput.phonenumber,
     );
-    const hashedNewPassword = await this.hashingPassword(userFound.password);
+
+    const checked = await this.checkPassword(
+      userResetInput.oldPassword,
+      userFound.password,
+    );
+    if (!checked) {
+      throw new BadRequestException('provided old password is not valid !');
+    }
+    const hashedNewPassword = await this.hashingPassword(
+      userResetInput.newPassword,
+    );
     const userRecovery = await this.prismaService.user.update({
       where: {
         username: userFound.username,

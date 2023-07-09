@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
 import { CreatePostInput } from './dto/create-post.input';
 import { Post } from '@prisma/client';
+
 @Injectable()
 export class PostService {
   constructor(
@@ -10,6 +11,12 @@ export class PostService {
     private userService: UserService,
   ) {}
   async createPost(input: CreatePostInput): Promise<Post | undefined> {
+    if (input.body === '') {
+      throw new BadRequestException('body is empty');
+    }
+    if (input.title === '') {
+      throw new BadRequestException('title is empty');
+    }
     const userFound = await this.userService.findUserById(input.userId);
     const createdPost = await this.prismaService.post.create({
       data: {
@@ -31,6 +38,9 @@ export class PostService {
         id: id,
       },
     });
+    if (!postFound) {
+      throw new BadRequestException('post did not found with provided id');
+    }
     return postFound;
   }
 
@@ -44,7 +54,9 @@ export class PostService {
       },
       include: { following: { include: { posts: true } } },
     });
-
+    if (!userFound) {
+      throw new BadRequestException('user did not found provided id');
+    }
     const feedPosts: Post[] = [];
     userFound.following.forEach((userFollow) => {
       userFollow.posts.forEach((post) => {
@@ -64,6 +76,9 @@ export class PostService {
         likedBy: true,
       },
     });
+    if (!postFound) {
+      throw new BadRequestException('post with this id didnot found');
+    }
     let likedBefore: Boolean = false;
     postFound.likedBy.forEach((user) => {
       if (user.id === userFound.id) {
@@ -88,6 +103,7 @@ export class PostService {
     }
     return postUpdated;
   }
+
   async unlikePost(userId: number, postId: number): Promise<Post> {
     const userFound = await this.userService.findUserById(userId);
     const postFound = await this.prismaService.post.findUnique({
@@ -211,5 +227,16 @@ export class PostService {
     );
 
     return { startOfDay, endOfDay };
+  }
+
+  async searchBasedOnHashTags(hashtags: string[]): Promise<Post[]> {
+    const posts = await this.prismaService.post.findMany({
+      where: {
+        OR: hashtags.map((hashtag) => ({
+          body: { contains: hashtag },
+        })),
+      },
+    });
+    return posts;
   }
 }

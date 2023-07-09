@@ -13,6 +13,10 @@ export class ResetPasswordInput {
 
   @IsString()
   @Field()
+  oldPassword: string;
+
+  @IsString()
+  @Field()
   newPassword: string;
 
   @IsString()

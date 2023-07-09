@@ -2,25 +2,34 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type message {
-  id: ID!
-  read: Boolean!
-  body: String!
-  user: user!
-  userId: ID!
-  post: post!
-  postId: ID!
-  seen: Int!
-}
-
 type post {
   id: ID!
   title: String!
   body: String!
-  comments: [message!]!
-  user: user!
-  userId: ID!
+  comments: [comment!]!
   likes: Float!
+  likedBy: [user!]!
+  userId: ID!
+}
+
+type comment {
+  id: ID!
+  text: String!
+  postId: Float!
+  userId: ID!
+}
+
+type message {
+  id: ID!
+  read: Boolean!
+  body: String!
+  sender: user!
+  senderId: ID!
+  reciptient: user!
+  reciptientId: ID!
+  post: post!
+  postId: ID!
+  seen: Int!
 }
 
 type notification {
@@ -53,15 +62,17 @@ type Auth {
   status: String!
   phonenumber: String!
   token: String!
+  id: Float!
 }
 
 type Query {
   getUserProfile(id: Float!): user
   listFollowers(id: Float!): [user!]!
   listFollowedBy(id: Float!): [user!]!
-  getAllPosts: [post!]!
+  getByUserName(username: String!): user!
   getPost(id: Float!): post!
   RetrieveUsersPosts(id: Float!): [post!]!
+  searchBasedOnHashTags(input: [String!]!): [post!]!
   retrievePopularPosts: [post!]!
   retrieveDirectMessages(userId: Float!): [message!]!
 }
@@ -79,9 +90,9 @@ type Mutation {
   unlikePost(userId: Float!, postId: Float!): post!
   commentOnPost(postId: Float!, userId: Float!, text: String!): post!
   deletePost(id: Float!, userId: Float!): post!
-  updatePost(input: UpdatePostInput!): post!
   sendDirectMessage(input: CreateMessageInput!): message!
   markMessageAsRead(messageId: Float!): message!
+  sendPushNotification(input: CreateNotificationDto!): notification!
 }
 
 input UpdateUserInput {
@@ -108,6 +119,7 @@ input LoginUserInput {
 input ResetPasswordInput {
   username: String!
   phonenumber: String!
+  oldPassword: String!
   newPassword: String!
   passwordConfirm: String!
 }
@@ -118,12 +130,16 @@ input CreatePostInput {
   userId: Float!
 }
 
-input UpdatePostInput {
-  title: String!
-}
-
 input CreateMessageInput {
   body: String!
   senderId: Float!
   reciptientId: Float!
+}
+
+input CreateNotificationDto {
+  userId: Float!
+  title: String!
+  body: String!
+  device_type: String!
+  notification_token: String!
 }

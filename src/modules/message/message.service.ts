@@ -18,7 +18,9 @@ export class MessageService {
     );
     const MessageCreated = await this.prismaService.message.create({
       data: {
-        ...input,
+        body: input.body,
+        senderId: senderFound.id,
+        reciptientId: reciptientFound.id,
       },
     });
     return MessageCreated;
@@ -40,9 +42,12 @@ export class MessageService {
     if (!messageId) {
       throw new BadRequestException('message id is invalid');
     }
-    const messageFound = await this.prismaService.message.findUnique({
+    const messageFound = await this.prismaService.message.update({
       where: {
         id: messageId,
+      },
+      data: {
+        read: true,
       },
     });
     return messageFound;
