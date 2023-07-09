@@ -13,7 +13,6 @@ import { UserService } from '../user/user.service';
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
-    private configService: ConfigService,
     private jwtService: JwtService,
     private userService: UserService,
   ) {}
@@ -21,26 +20,25 @@ export class AuthService {
     const userFoundWithUsername = await this.userService.findUserByUserName(
       userRegInput.username,
     );
-    if (!userFoundWithUsername) {
+    if (userFoundWithUsername) {
       throw new BadRequestException('user already exists with this username');
     }
     const userFoundWithPassword = await this.userService.findUserByPhoneNumber(
       userRegInput.phonenumber,
     );
-    if (!userFoundWithPassword) {
+    if (userFoundWithPassword) {
       throw new BadRequestException(
         'user already exists with this phonenumber',
       );
     }
-    const hashedPassword = await bcrypt.hash(
-      userRegInput.password,
-      parseInt(this.configService.get<string>('SALT_ROUND')),
-    );
-
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(userRegInput.password, salt);
     const userCreated = await this.prismaService.user.create({
       data: { ...userRegInput, password: hashedPassword },
     });
     const token = await this.assignToken(userCreated);
+    delete userCreated.password;
     return { userCreated, token };
   }
 
@@ -59,7 +57,17 @@ export class AuthService {
       throw new BadRequestException('password incorrect');
     }
     const token = await this.assignToken(userFound);
+    delete userFound.password;
     return { userFound, token };
+  }
+
+  async userLogOut(id: number) {
+    const userFound = await this.userService.findUserById(id);
+    if (!userFound) {
+      throw new BadRequestException('user did not found with provided id');
+    }
+    delete userFound.password;
+    return userFound;
   }
 
   async resetPassword(userResetInput: ResetPasswordInput) {
@@ -73,7 +81,6 @@ export class AuthService {
     const hashedNewPassword = await this.hashingPassword(userFound.password);
     const userRecovery = await this.prismaService.user.update({
       where: {
-        phonenumber: userFound.phonenumber,
         username: userFound.username,
       },
       data: {
@@ -82,14 +89,14 @@ export class AuthService {
       },
     });
     const token = await this.assignToken(userRecovery);
+    delete userRecovery.password;
     return { userRecovery, token };
   }
 
   async hashingPassword(password: string): Promise<string> {
-    return await bcrypt.hash(
-      password,
-      parseInt(this.configService.get<string>('SALT_ROUND')),
-    );
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    return await bcrypt.hash(password, salt);
   }
 
   async assignToken(user: User): Promise<String> {
@@ -99,6 +106,7 @@ export class AuthService {
     });
     return token;
   }
+
   async checkPassword(
     passwordPassed: string,
     userFoundPassword: string,

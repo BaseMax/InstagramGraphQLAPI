@@ -7,11 +7,6 @@ import { ParseIntPipe } from '@nestjs/common';
 @Resolver(() => User)
 export class UserResolver {
   constructor(private userService: UserService) {}
-  @Query(() => [User])
-  async getAllUsers() {
-    // return this.userService.
-  }
-
   @Query(() => User, { nullable: true })
   async getUserProfile(@Args('id', ParseIntPipe) id: number) {
     return this.userService.getUserProfile(id);
@@ -27,8 +22,21 @@ export class UserResolver {
     return this.userService.deleteUser(id);
   }
 
-  @Mutation(() => User)
-  async followUser(@Args('id' , ParseIntPipe) id : number){
-    return this.userService
+  @Mutation(() => [User])
+  async followUser(
+    @Args('ToFollowId', ParseIntPipe) ToFollowId: number,
+    @Args('wantFollowId', ParseIntPipe) wantFollowId: number,
+  ) {
+    return await this.userService.followUser(ToFollowId, wantFollowId);
+  }
+
+  @Query(() => [User])
+  async listFollowers(@Args('id', ParseIntPipe) id: number) {
+    return await this.userService.listFollowers(id);
+  }
+
+  @Query(() => [User])
+  async listFollowedBy(@Args('id', ParseIntPipe) id: number) {
+    return await this.userService.listFollowingBy(id);
   }
 }

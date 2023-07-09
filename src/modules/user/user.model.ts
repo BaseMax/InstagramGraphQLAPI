@@ -34,4 +34,10 @@ export class User {
 
   @Field(() => [Notification])
   notifications: Notification[];
+
+  @Field(() => [User])
+  following: User[];
+
+  @Field(() => [User])
+  followedBy: User[];
 }
