@@ -1,0 +1,138 @@
+# write down first mutations and queries
+
+type User {
+  id: String!
+  name: String!
+  username: String!
+  password: String!
+  bio: String
+  phonenumber: String
+  status: String
+}
+
+type Post {
+  id: String!
+  title: String!
+  body: String!
+  likes: Int
+}
+
+type Message {
+  id: String!
+  body: String!
+  senderId: ID!
+  reciptientId: ID!
+  read: Boolean!
+  postId: ID!
+}
+
+type NotificationToken {
+  id: String!
+  userId: String!
+  device_type: String!
+  notification_type: String
+  notifications: [Notification!]
+  status: String!
+}
+
+type Notification {
+  id: String!
+  title: String!
+  body: String!
+  notificationId: String!
+  status: String!
+  userId: String!
+}
+
+type Feed {
+  id: String!
+  caption: String!
+  imageUrl: String!
+  likesCount: Int!
+  commentsCount: Int!
+  createdAt: Date
+  user: User!
+}
+
+type Mutation {
+  CreateUser(input: UserCreateInput!): UserRegistered!
+  Login(input: LoginUserInput!): Token!
+  LogOutUser(userId: ID!): String!
+  UpdateUserProfile(input: UpdateUserProfileInput): User!
+  FollowUser(userId: ID!): followResponse!
+  UnfollowUser(userId: ID!): followResponse!
+  CreatePost(input: PostCreateInput!): Post!
+  LikePost(postId: ID!): Post!
+  UnlikePost(postId: ID!): Post!
+  CommentOnPost(input: CommentPostInput!): Post!
+  DeletePost(postId: ID!): Post!
+  SendMessage(input: MessageSendInput!): Message!
+  MarkNotificationAsRead(notificationId: ID!): Notification!
+}
+
+type Query {
+  GetUserProfile(userId: ID!): UserProfile!
+  GetUsersFollowers(userId: ID!): [User!]
+  GetUsersFollowing(userId: ID!): [User!]
+  GetUserFeed(userId: ID!): [Feed!]
+  RetrievNotification(user: ID!): Notification!
+}
+
+input UserCreateInput {
+  name: String!
+  username: String!
+  password: String!
+  phonenumber: String!
+  bio: String
+  status: String
+}
+
+input UpdateUserProfileInput {
+  name: String
+  username: String
+  password: String
+  phonenumber: String
+  bio: String
+  status: String
+}
+
+type UserRegistered {
+  id: String!
+  name: String!
+  username: String!
+}
+
+type Token {
+  token: String!
+}
+
+type followResponse {
+  id: String!
+  username: String!
+}
+
+type CreatePostInput {
+  title: String!
+  body: String!
+  userId: String!
+}
+
+type MessageSendInput {
+  senderId: String!
+  reciptiontId: String!
+  body: String!
+  postId: String
+}
+
+type UserProfile {
+  id: String!
+  username: String
+  name: String
+  bio: String
+  profilePicture: String
+  followersCount: Int
+  followingCount: Int
+  postsCount: Int
+  followers: [User!]
+  following: [User!]
+}
